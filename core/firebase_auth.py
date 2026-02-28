@@ -3,21 +3,25 @@ from firebase_admin import credentials, auth
 from fastapi import HTTPException, Header
 from typing import Optional
 import os
+import json
 
 # Initialize Firebase Admin SDK
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SERVICE_ACCOUNT_PATH = os.path.join(BASE_DIR, "service-account.json")
-
 if not firebase_admin._apps:
-    cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
+    # Try environment variable first (production)
+    service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+    if service_account_json:
+        service_account_dict = json.loads(service_account_json)
+        cred = credentials.Certificate(service_account_dict)
+    else:
+        # Fall back to file (local development)
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        SERVICE_ACCOUNT_PATH = os.path.join(BASE_DIR, "service-account.json")
+        cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
+
     firebase_admin.initialize_app(cred)
 
 
 async def verify_token(authorization: Optional[str] = Header(None)) -> dict:
-    """
-    Verify Firebase token from Authorization header.
-    Returns the decoded token with user info.
-    """
     if not authorization:
         raise HTTPException(status_code=401, detail="Authorization header missing")
 
@@ -38,5 +42,4 @@ async def verify_token(authorization: Optional[str] = Header(None)) -> dict:
 
 
 def get_user_id(decoded_token: dict) -> str:
-    """Extract user ID from decoded Firebase token."""
     return decoded_token.get("uid", "")

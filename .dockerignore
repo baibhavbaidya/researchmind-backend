@@ -1,0 +1,11 @@
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.faiss
+uploaded_docs/
+data/
+service-account.json
+.git
+*.log
