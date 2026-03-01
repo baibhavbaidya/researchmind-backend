@@ -68,6 +68,15 @@ async def startup_event():
     init_db()
     print("✅ ResearchMind API ready!")
 
+@app.get("/")
+async def root():
+    return {
+        "name": "ResearchMind API",
+        "version": "1.0.0",
+        "status": "running",
+        "docs": "https://baibhavbaidya-researchmind-backend.hf.space/docs",
+        "frontend": "https://researchmind-bb.vercel.app"
+    }
 
 @app.get("/health")
 async def health_check():
