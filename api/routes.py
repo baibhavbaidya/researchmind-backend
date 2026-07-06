@@ -351,7 +351,7 @@ Respond in a way that makes the user feel they are talking to a world-class rese
         from langchain_groq import ChatGroq
         import os
         llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             api_key=os.getenv("GROQ_API_KEY"),
             temperature=0.4
         )
