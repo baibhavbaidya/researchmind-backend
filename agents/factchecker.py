@@ -12,7 +12,7 @@ class FactCheckerAgent:
         self.name = "FactChecker"
         self.llm = ChatGroq(
             api_key=os.getenv("GROQ_API_KEY"),
-            model="llama-3.1-8b-instant",
+            model="openai/gpt-oss-120b",
             temperature=0.1,
             max_tokens=600
         )
